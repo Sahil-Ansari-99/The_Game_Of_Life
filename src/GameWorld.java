@@ -144,30 +144,6 @@ class GameWorld extends JPanel implements MouseListener, MouseMotionListener, Ke
                 case "\u2190" -> goLeft();
                 case "\u2192" -> goRight();
             }
-//            if (actionCommand.equals("Run")) {
-//                performRun();
-//            }
-//            if (actionCommand.equals("Pause")) {
-//                performPause();
-//            }
-//            if (actionCommand.equals("Reset")) {
-//                performReset();
-//            }
-//            if (actionCommand.equals("Centre")) {
-//                performCentreAlign();
-//            }
-//            if (actionCommand.equals("\u2191")) {
-//                goUp();
-//            }
-//            if (actionCommand.equals("\u2193")) {
-//                goDown();
-//            }
-//            if (actionCommand.equals("\u2190")) {
-//                goLeft();
-//            }
-//            if (actionCommand.equals("\u2192")) {
-//                goRight();
-//            }
         } else {
             repaint();
         }
