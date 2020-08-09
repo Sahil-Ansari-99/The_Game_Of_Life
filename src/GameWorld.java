@@ -8,6 +8,7 @@ class GameWorld extends JPanel implements MouseListener, MouseMotionListener, Ke
     private int animationSpeed;
     private int xOffset, yOffset;
     private int offsetStep;
+    private int boxMultiplier;
     private char currKey;
     private Timer timer;
     private boolean isAnimationRunning;
@@ -19,14 +20,15 @@ class GameWorld extends JPanel implements MouseListener, MouseMotionListener, Ke
         this.height = height;
         this.size = 10;
         this.boxNumber = width / size;
+        this.boxMultiplier = 3;
         this.currKey = 'a';
         this.animationSpeed = 100;
         this.isAnimationRunning = false;
-        this.xOffset = boxNumber / 3;
-        this.yOffset = boxNumber / 3;
+        this.xOffset = boxMultiplier * boxNumber / 3;
+        this.yOffset = boxMultiplier * boxNumber / 3;
         this.offsetStep = 2;
         this.timer = new Timer(animationSpeed, this);
-        this.simulator = new Simulator(2 * boxNumber, this);
+        this.simulator = new Simulator(boxMultiplier * boxNumber, this);
         setSize(this.width, this.height);
         this.setFocusable(true);
         this.requestFocus();
@@ -96,8 +98,8 @@ class GameWorld extends JPanel implements MouseListener, MouseMotionListener, Ke
     // Centre aligns the world to default view space
     private void performCentreAlign() {
         System.out.println("Centre Aligning...");
-        xOffset = boxNumber / 3;
-        yOffset = boxNumber / 3;
+        xOffset = boxMultiplier * boxNumber / 3;
+        yOffset = boxMultiplier * boxNumber / 3;
         if (!isAnimationRunning) repaint();
     }
 
@@ -111,7 +113,7 @@ class GameWorld extends JPanel implements MouseListener, MouseMotionListener, Ke
     // Scrolls down in the world
     private void goDown() {
         System.out.println("Down...");
-        yOffset = Math.min(boxNumber, yOffset + offsetStep);
+        yOffset = Math.min((boxMultiplier - 1) * boxNumber, yOffset + offsetStep);
         if (!isAnimationRunning) repaint();
     }
 
@@ -125,7 +127,7 @@ class GameWorld extends JPanel implements MouseListener, MouseMotionListener, Ke
     // Scrolls right in the world
     private void goRight() {
         System.out.println("Right...");
-        xOffset = Math.min(boxNumber, xOffset + offsetStep);
+        xOffset = Math.min((boxMultiplier - 1) * boxNumber, xOffset + offsetStep);
         if (!isAnimationRunning) repaint();
     }
 
@@ -245,8 +247,8 @@ class GameWorld extends JPanel implements MouseListener, MouseMotionListener, Ke
     private void resetVariables() {
         isAnimationRunning = false;
         animationSpeed = 100;
-        xOffset = boxNumber / 3;
-        yOffset = boxNumber / 3;
+        xOffset = boxMultiplier * boxNumber / 3;
+        yOffset = boxMultiplier * boxNumber / 3;
     }
 }
 
