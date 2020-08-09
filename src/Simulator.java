@@ -1,3 +1,4 @@
+// performs the simulation
 public class Simulator {
     private int[][] states;
     private GameWorld gameWorld;
@@ -14,10 +15,12 @@ public class Simulator {
         this.keepSimulating = false;
     }
 
+    // Sets a cell alive
     public void setAlive(int x, int y) {
         states[x][y] = 1;
     }
 
+    // Sets a cell dead
     public void setDead(int x, int y) {
         states[x][y] = 0;
     }
@@ -26,14 +29,17 @@ public class Simulator {
         return this.states;
     }
 
+    // check if cell coordinates are valid and if valid then is it alive or not
     private boolean isValidAndAlive(int x, int y) {
         return x >= 0 && x < n && y >= 0 && y < n && states[x][y] == 1;
     }
 
+    // check if cell coordinates are valid
     private boolean isValid(int x, int y) {
         return x >= 0 && x < n && y >= 0 && y < n;
     }
 
+    // get number of alive neighbours given cell
     private int getALiveNeighbourCount(int x, int y) {
         int count = 0;
         for (int i = 0; i < drs.length; i++) {
@@ -42,6 +48,7 @@ public class Simulator {
         return count;
     }
 
+    // updates states array
     private void updateStates(int[][] nextStates) {
         for (int i = 0; i < n; i++) {
             System.arraycopy(nextStates[i], 0, states[i], 0, n);
@@ -69,6 +76,7 @@ public class Simulator {
         }
     }
 
+    // performs one step of simulation
     public int[][] simulateOnce() {
         int[][] nextStates = new int[n][n];
         for (int i = 0; i < n; i++) {
@@ -88,6 +96,7 @@ public class Simulator {
         return states;
     }
 
+    // reset all states to dead
     public void resetStates() {
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {

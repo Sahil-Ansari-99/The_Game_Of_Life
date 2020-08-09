@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
+// creates the UI
 class GameWorld extends JPanel implements MouseListener, MouseMotionListener, KeyListener, ActionListener {
     private int width, height, size, boxNumber;
     private int animationSpeed;
@@ -26,7 +27,7 @@ class GameWorld extends JPanel implements MouseListener, MouseMotionListener, Ke
         this.offsetStep = 2;
         this.timer = new Timer(animationSpeed, this);
         this.simulator = new Simulator(2 * boxNumber, this);
-        setSize(width = this.width, height = this.height);
+        setSize(this.width, this.height);
         this.setFocusable(true);
         this.requestFocus();
         addMouseListener(this);
@@ -35,11 +36,11 @@ class GameWorld extends JPanel implements MouseListener, MouseMotionListener, Ke
         menuHandler = new MenuHandler(this);
     }
 
+    // draws all UI components, called every frame
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        menuHandler.position();
-        menuHandler.addToFrame();
+        drawMenu();
         int[][] states;
         if (isAnimationRunning) {
             timer.setDelay(animationSpeed);
@@ -63,84 +64,140 @@ class GameWorld extends JPanel implements MouseListener, MouseMotionListener, Ke
         }
     }
 
+    // draws Menu
+    public void drawMenu() {
+        menuHandler.position();
+        menuHandler.addToFrame();
+    }
+
+    // Starts Simulation
+    private void performRun() {
+        isAnimationRunning = true;
+        System.out.println("Starting animation...");
+        repaint();
+    }
+
+    // Pauses Simulation
+    private void performPause() {
+        isAnimationRunning = false;
+        timer.stop();
+        System.out.println("Animation stopped...");
+    }
+
+    // Resets the world
+    private void performReset() {
+        System.out.println("Performing Reset...");
+        simulator.resetStates();
+        menuHandler.resetSpeed();
+        resetVariables();
+        repaint();
+    }
+
+    // Centre aligns the world to default view space
+    private void performCentreAlign() {
+        System.out.println("Centre Aligning...");
+        xOffset = boxNumber / 3;
+        yOffset = boxNumber / 3;
+        if (!isAnimationRunning) repaint();
+    }
+
+    // Scrolls Up in the world
+    private void goUp() {
+        System.out.println("Up...");
+        yOffset = Math.max(0, yOffset - offsetStep);
+        if (!isAnimationRunning) repaint();
+    }
+
+    // Scrolls down in the world
+    private void goDown() {
+        System.out.println("Down...");
+        yOffset = Math.min(boxNumber, yOffset + offsetStep);
+        if (!isAnimationRunning) repaint();
+    }
+
+    // Scrolls left in the world
+    private void goLeft() {
+        System.out.println("Left....");
+        xOffset = Math.max(0, xOffset - offsetStep);
+        if (!isAnimationRunning) repaint();
+    }
+
+    // Scrolls right in the world
+    private void goRight() {
+        System.out.println("Right...");
+        xOffset = Math.min(boxNumber, xOffset + offsetStep);
+        if (!isAnimationRunning) repaint();
+    }
+
+    // handles button clicks
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand() != null) {
             String actionCommand = e.getActionCommand();
-            if (actionCommand.equals("Run")) {
-                isAnimationRunning = true;
-                System.out.println("Starting animation...");
-                repaint();
+            switch (actionCommand) {
+                case "Run" -> performRun();
+                case "Pause" -> performPause();
+                case "Reset" -> performReset();
+                case "Centre" -> performCentreAlign();
+                case "\u2191" -> goUp();
+                case "\u2193" -> goDown();
+                case "\u2190" -> goLeft();
+                case "\u2192" -> goRight();
             }
-            if (actionCommand.equals("Pause")) {
-                isAnimationRunning = false;
-                timer.stop();
-                System.out.println("Animation stopped...");
-            }
-            if (actionCommand.equals("Reset")) {
-                System.out.println("Performing Reset...");
-                simulator.resetStates();
-                menuHandler.resetSpeed();
-                resetVariables();
-                repaint();
-            }
-            if (actionCommand.equals("Centre")) {
-                System.out.println("Centre Aligning...");
-                xOffset = boxNumber / 3;
-                yOffset = boxNumber / 3;
-                if (!isAnimationRunning) repaint();
-            }
-            if (actionCommand.equals("\u2191")) {
-                System.out.println("Up...");
-                yOffset = Math.max(0, yOffset - offsetStep);
-                if (!isAnimationRunning) repaint();
-            }
-            if (actionCommand.equals("\u2193")) {
-                System.out.println("Down...");
-                yOffset = Math.min(boxNumber, yOffset + offsetStep);
-                if (!isAnimationRunning) repaint();
-            }
-            if (actionCommand.equals("\u2190")) {
-                System.out.println("Left....");
-                xOffset = Math.max(0, xOffset - offsetStep);
-                if (!isAnimationRunning) repaint();
-            }
-            if (actionCommand.equals("\u2192")) {
-                System.out.println("Right...");
-                xOffset = Math.min(boxNumber, xOffset + offsetStep);
-                if (!isAnimationRunning) repaint();
-            }
+//            if (actionCommand.equals("Run")) {
+//                performRun();
+//            }
+//            if (actionCommand.equals("Pause")) {
+//                performPause();
+//            }
+//            if (actionCommand.equals("Reset")) {
+//                performReset();
+//            }
+//            if (actionCommand.equals("Centre")) {
+//                performCentreAlign();
+//            }
+//            if (actionCommand.equals("\u2191")) {
+//                goUp();
+//            }
+//            if (actionCommand.equals("\u2193")) {
+//                goDown();
+//            }
+//            if (actionCommand.equals("\u2190")) {
+//                goLeft();
+//            }
+//            if (actionCommand.equals("\u2192")) {
+//                goRight();
+//            }
         } else {
             repaint();
         }
     }
 
+    // handles keyboard events
     @Override
     public void keyTyped(KeyEvent e) {
 
     }
 
+    // handles keyboard events
     @Override
     public void keyPressed(KeyEvent e) {
         currKey = e.getKeyChar();
+        System.out.println(currKey);
         if (e.getKeyCode() == KeyEvent.VK_SPACE) {
             isAnimationRunning = !isAnimationRunning;
             if (isAnimationRunning) {
-                System.out.println("Starting animation...");
-                repaint();
+                performRun();
             }
             else {
-                System.out.println("Animation stopped...");
-                timer.stop();
+                performPause();
             }
         }
         if (currKey == 'r') {
-            System.out.println("Performing Reset...");
-            isAnimationRunning = false;
-            simulator.resetStates();
-            animationSpeed = 100;
-            menuHandler.resetSpeed();
-            repaint();
+            performReset();
+        }
+        if (currKey == 'c') {
+            performCentreAlign();
         }
     }
 
@@ -149,6 +206,7 @@ class GameWorld extends JPanel implements MouseListener, MouseMotionListener, Ke
 
     }
 
+    // handles mouse click events
     @Override
     public void mouseClicked(MouseEvent e) {
         performMouseClick(e);
@@ -184,6 +242,7 @@ class GameWorld extends JPanel implements MouseListener, MouseMotionListener, Ke
 
     }
 
+    // performs required computation to map mouse clicks
     private void performMouseClick(MouseEvent mouseEvent) {
         int xRem = mouseEvent.getPoint().x % size;
         int yRem = mouseEvent.getPoint().y % size;
@@ -200,26 +259,19 @@ class GameWorld extends JPanel implements MouseListener, MouseMotionListener, Ke
         }
     }
 
+    // changes animation speed
     public void setAnimationSpeed(int speed) {
         double change = ((50 - speed) / 50.0) * 100;
         animationSpeed = 100 + (int)change;
     }
 
+    // resets the world variables
     private void resetVariables() {
         isAnimationRunning = false;
         animationSpeed = 100;
         xOffset = boxNumber / 3;
         yOffset = boxNumber / 3;
     }
-
-//    private void startAnimation() {
-//        if (isAnimationRunning) {
-//            System.out.println("Animating...");
-//            simulator.simulateOnce();
-//            repaint();
-//        }
-//        timer.stop();
-//    }
 }
 
 class Main extends JFrame {
@@ -231,9 +283,12 @@ class Main extends JFrame {
         this.setResizable(false);
         add(gameWorld);
         pack();
+        System.out.println("Packed...");
     }
 
     public static void main(String[] args) {
-        new Main().setVisible(true);
+        Main main = new Main();
+        main.setVisible(true);
+//        main.validate();
     }
 }

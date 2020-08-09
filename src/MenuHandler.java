@@ -2,6 +2,7 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+// draws all menu buttons
 public class MenuHandler {
     private GameWorld gameWorld;
     private JSlider animationSpeedSlider;
@@ -56,6 +57,7 @@ public class MenuHandler {
         });
     }
 
+    // position all buttons on the UI
     public void position() {
         int runBtnX = 10;
         run.setBounds(runBtnX, gameWorld.getHeight() - 40, run.getWidth(), run.getHeight());
@@ -84,6 +86,7 @@ public class MenuHandler {
         down.setBounds(upBtnX, left.getY() + left.getHeight() + 20, down.getWidth(), down.getHeight());
     }
 
+    // add all buttons to gameWorld
     public void addToFrame() {
         gameWorld.add(run);
         gameWorld.add(pause);
